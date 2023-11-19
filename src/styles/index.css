@@ -12,6 +12,7 @@ main{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin: 0 auto;
 }
 form h1{
   font-size: 2.25em;
@@ -25,6 +26,11 @@ form input{
   width: 600px;
   border: 1px solid #b3b3b3;
   border-radius: 5px;
+}
+
+figure a{
+  text-decoration: none;
+  color: #b3b3b3;
 }
 
 .images{
