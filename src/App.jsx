@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './styles/index.css';
 import CardImage from "./card-image";
 
 const App = () => {
   const [searchText, setSearchText] = useState('')
   const [totalPages, setTotalPages] = useState(0)
+  const [page, setPage] = useState(1)
   const [images, setImages] = useState([])
 
 
@@ -13,7 +14,7 @@ const App = () => {
 
   async function getImages(){
      try {
-         const res = await fetch(`${apiURL}?query=${searchText}&page=1&per_page=${images_per_page}&client_id=${import.meta.env.VITE_API_KEY}`)
+         const res = await fetch(`${apiURL}?query=${searchText}&page=${page}&per_page=${images_per_page}&client_id=${import.meta.env.VITE_API_KEY}`)
         const data = res.json()
         console.log('request');
         
@@ -27,7 +28,6 @@ const App = () => {
     
     const handleInput = (e) => {
       e.preventDefault()
-      console.log(e.target.value)
       setSearchText(e.target.value)
     }
     const handleSearch = (e) =>{
@@ -36,10 +36,20 @@ const App = () => {
       getImages().then((res) => {
         setImages(res.results)
         setTotalPages(res.total_pages)
-        console.log(res.results);
       })
+      setPage(1)
+
     }
+
     
+
+    useEffect(() => {
+      getImages().then((res) => {
+        setImages(res.results)
+        setTotalPages(res.total_pages)
+      })
+    }, [page])
+
 
   return (
     <>
@@ -59,13 +69,23 @@ const App = () => {
           })}
         </div>
 
+          <div className="buttons">
+
+            {page > 1 && <button onClick={() => setPage(page - 1)}>Previous</button>}
+            {page < totalPages && <button  onClick={() => setPage(page + 1)}>next</button>}
+
+
+
           {totalPages > 1 ? 
           (
-            <p className='totalpages'>Number of pages: {totalPages}</p>
+            <p className='totalpages'>Page {page} of {totalPages}</p>
           ): 
           (
             <p></p>
           )}
+          </div>
+
+         
       
 
 
